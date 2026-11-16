@@ -219,7 +219,7 @@ export function dataFromForm(schema: CollectionSchema, form: FormData): Record<s
     }
     if (f.required) {
       const v = out[f.key] as unknown;
-      const empty = v === "" || v == null || (Array.isArray(v) && v.length === 0) || (typeof v === "object" && v !== null && "ms" in v && !(v as { ms: string }).ms && !(v as { en: string }).en);
+      const empty = v === "" || v == null || (Array.isArray(v) && v.length === 0) || (typeof v === "object" && v !== null && "ms" in v && !(v as unknown as { ms: string }).ms && !(v as unknown as { en: string }).en);
       if (empty) throw new ContentError(`“${f.label}” is required`);
     }
   }

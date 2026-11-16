@@ -119,3 +119,6 @@ export default async function ServicePage({ params }: PageProps<"/[lang]/service
     </>
   );
 }
+
+/** Known slugs are prerendered via generateStaticParams; new CMS slugs render on demand. */
+export const instant = false;

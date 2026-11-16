@@ -6,6 +6,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { getDb } from "../db";
 import { can, ForbiddenError, type Permission } from "./rbac";
 import { resolveSession, type SessionInfo, type SessionStage } from "./service";
@@ -25,6 +26,7 @@ const STAGE_PATH: Record<Exclude<SessionStage, "active">, string> = {
 
 /** For portal pages: redirects instead of throwing. */
 export async function requireStaff(permission?: Permission): Promise<SessionInfo> {
+  await connection(); // staff pages are always per-request (time, session, live data)
   const s = await getStaffSession();
   if (!s) redirect("/staff/login");
   if (s.stage !== "active") redirect(STAGE_PATH[s.stage]);

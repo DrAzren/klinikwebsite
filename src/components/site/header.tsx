@@ -37,10 +37,13 @@ export function SiteHeader({ lang, nav, bookLabel, bookHref, logoUrl }: Props) {
     return () => window.removeEventListener("scroll", on);
   }, []);
 
-  useEffect(() => {
+  // Close menus when the route changes (adjusting state during render, not in an effect).
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (prevPath !== pathname) {
+    setPrevPath(pathname);
     setOpen(false);
     setSvcOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";

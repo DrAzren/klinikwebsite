@@ -5,6 +5,11 @@ export function formatPhone(raw: string): string {
   return m ? `+60 ${m[1]}-${m[2]} ${m[3]}` : raw;
 }
 
+/** Current Malaysia time formatted for <input type="datetime-local">. */
+export const nowMytInput = () => new Date(Date.now() + 8 * 3600_000).toISOString().slice(0, 16);
+
+export const isFuture = (d: Date | string | null | undefined) => !!d && new Date(d).getTime() > Date.now();
+
 export const formatMYR = (n: number | string | null | undefined) =>
   n == null || n === "" ? "—" : new Intl.NumberFormat("ms-MY", { style: "currency", currency: "MYR" }).format(Number(n));
 

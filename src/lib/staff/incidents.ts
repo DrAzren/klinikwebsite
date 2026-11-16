@@ -12,6 +12,16 @@ export const INCIDENT_CATEGORIES = ["medication_inventory", "missing_stock", "eq
 export const INCIDENT_STATUSES = ["open", "investigating", "action_required", "resolved", "closed"] as const;
 export const INCIDENT_SEVERITIES = ["low", "medium", "high", "critical"] as const;
 
+export const CATEGORY_LABEL: Record<string, string> = {
+  medication_inventory: "Ubat / inventori · Medication or inventory",
+  missing_stock: "Stok hilang · Missing stock",
+  equipment: "Peralatan · Equipment",
+  safety: "Keselamatan · Safety",
+  patient_complaint: "Aduan pesakit · Patient complaint",
+  operational: "Operasi · Operational",
+  other: "Lain-lain · Other",
+};
+
 export class IncidentError extends Error {}
 
 export interface IncidentInput {
