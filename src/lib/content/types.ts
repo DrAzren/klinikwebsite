@@ -13,6 +13,8 @@ export interface SiteSettings {
   hours: { label: Localized; value: Localized }[];
   social: { instagram?: string; facebook?: string; tiktok?: string; youtube?: string; threads?: string };
   logoUrl?: string;
+  /** Real clinic photographs only (no stock / generated people). */
+  gallery?: { src: string; alt: Localized }[];
 }
 
 export interface Doctor {

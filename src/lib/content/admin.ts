@@ -47,6 +47,7 @@ export const SCHEMAS: CollectionSchema[] = [
       { key: "hours", label: "Opening hours (JSON)", kind: "json", help: 'Example: [{"label":{"ms":"Isnin–Jumaat","en":"Mon–Fri"},"value":{"ms":"9 pg – 10 mlm","en":"9am – 10pm"}}]. Leave [] to show "contact us for hours".' },
       { key: "social", label: "Social links (JSON)", kind: "json", help: '{"instagram":"https://instagram.com/…","facebook":"…","tiktok":"…","youtube":"…"}' },
       { key: "logoUrl", label: "Logo image URL", kind: "image", help: "Official logo file (e.g. /brand/logo.svg). Leave empty to use the wordmark." },
+      { key: "gallery", label: "Clinic photo gallery (JSON)", kind: "json", help: 'Real clinic photos only: [{"src":"/images/clinic/reception.jpg","alt":{"ms":"Ruang menunggu","en":"Waiting area"}}]. Shown on About when not empty.' },
     ],
   },
   {

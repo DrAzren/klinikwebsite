@@ -199,3 +199,9 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Used via arbitrary animate-[float_…] utilities, so defined outside @theme. */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}

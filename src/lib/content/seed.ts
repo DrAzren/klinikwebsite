@@ -36,6 +36,7 @@ export const SEED: { [C in CollectionName]: SeedItem<C>[] } = {
         hours: [],
         social: {},
         logoUrl: "",
+        gallery: [],
       },
     },
   ],

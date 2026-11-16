@@ -45,7 +45,7 @@ export function backoffMs(attempt: number): number {
 export async function processDueJobs(
   db: Db,
   handlers: Partial<Record<JobKind, JobHandler>>,
-  opts: { limit?: number; kinds?: JobKind[]; onlyIds?: string[] } = {},
+  opts: { limit?: number; kinds?: JobKind[]; onlyIds?: string[]; dedupeKeys?: string[] } = {},
 ) {
   const claimed = await db.query<Job>(
     `update integration_jobs set status = 'running', locked_at = now(), attempts = attempts + 1
@@ -55,11 +55,12 @@ export async function processDueJobs(
                 or (status = 'running' and locked_at < now() - interval '10 minutes'))
            and ($2::jsonb is null or kind in (select jsonb_array_elements_text($2::jsonb)))
            and ($3::jsonb is null or id::text in (select jsonb_array_elements_text($3::jsonb)))
+           and ($4::jsonb is null or dedupe_key in (select jsonb_array_elements_text($4::jsonb)))
          order by next_run_at
          limit $1
          for update skip locked)
       returning id, kind, dedupe_key, payload, attempts, max_attempts`,
-    [opts.limit ?? 20, opts.kinds ? JSON.stringify(opts.kinds) : null, opts.onlyIds ? JSON.stringify(opts.onlyIds) : null],
+    [opts.limit ?? 20, opts.kinds ? JSON.stringify(opts.kinds) : null, opts.onlyIds ? JSON.stringify(opts.onlyIds) : null, opts.dedupeKeys ? JSON.stringify(opts.dedupeKeys) : null],
   );
 
   const summary = { claimed: claimed.length, succeeded: 0, failed: 0, dead: 0 };
