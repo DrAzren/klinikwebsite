@@ -7,8 +7,8 @@ export default function NotFound() {
         <p className="font-display text-[8rem] italic leading-none text-teal-500/70">404</p>
         <h1 className="mt-4 text-3xl font-semibold text-navy-900">Halaman tidak dijumpai · Page not found</h1>
         <div className="mt-8 flex justify-center gap-3">
-          <Link href="/" className="inline-flex h-12 items-center rounded-full bg-navy-900 px-6 font-semibold text-white">Laman utama</Link>
-          <Link href="/en" className="inline-flex h-12 items-center rounded-full px-6 font-semibold text-navy-900 ring-1 ring-line">Home (English)</Link>
+          <Link href="/" prefetch={false} className="inline-flex h-12 items-center rounded-full bg-navy-900 px-6 font-semibold text-white">Laman utama</Link>
+          <Link href="/en" prefetch={false} className="inline-flex h-12 items-center rounded-full px-6 font-semibold text-navy-900 ring-1 ring-line">Home (English)</Link>
         </div>
       </div>
     </section>

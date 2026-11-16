@@ -158,6 +158,8 @@ export function SiteHeader({ lang, nav, bookLabel, bookHref, logoUrl }: Props) {
               <Link
                 href={switchLocalePath(pathname, lang === "ms" ? "en" : "ms")}
                 hrefLang={lang === "ms" ? "en" : "ms"}
+                // Switching language changes the root layout (full navigation); never prefetch across locales.
+                prefetch={false}
                 className={cx(
                   "hidden h-10 items-center gap-1.5 rounded-full px-3 text-sm font-semibold transition sm:inline-flex",
                   onDark ? "text-white/85 hover:bg-white/10" : "text-navy-900 hover:bg-navy-100/70",
@@ -237,7 +239,7 @@ export function SiteHeader({ lang, nav, bookLabel, bookHref, logoUrl }: Props) {
                   {bookLabel}
                 </a>
                 <div className="flex items-center justify-between">
-                  <Link href={switchLocalePath(pathname, lang === "ms" ? "en" : "ms")} className="inline-flex items-center gap-2 py-2 text-sm font-semibold text-navy-900">
+                  <Link href={switchLocalePath(pathname, lang === "ms" ? "en" : "ms")} prefetch={false} className="inline-flex items-center gap-2 py-2 text-sm font-semibold text-navy-900">
                     <Globe className="h-4 w-4" /> {nav.language}
                   </Link>
                   <Link href="/staff/login" className="inline-flex items-center gap-2 py-2 text-sm text-ink-muted">

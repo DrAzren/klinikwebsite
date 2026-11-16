@@ -1,0 +1,90 @@
+<!doctype html>
+<!--
+  Klinik Nissa — Brand opener (editable motion composition)
+  1920×1080 · 10 s · 30 fps · HyperFrames-style: one deterministic GSAP timeline on a fixed stage.
+
+  Edit: change the TEXT block and colours below. Preview: open this file in a browser.
+  Render (local): HyperFrames CLI (`npx skills add heygen-com/hyperframes`, then /hyperframes-cli render)
+  or any headless capture that steps `window.__timeline.seek(t)` frame by frame.
+  Outputs → public/motion/brand-opener.webm (VP9, CRF 34) + .mp4 (H.264, CRF 23) + poster .jpg.
+  Uses only brand tokens and the real book cover; no people are generated.
+-->
+<html lang="ms">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Klinik Nissa — Brand opener</title>
+<style>
+  :root { --navy:#0B1F3A; --royal:#173B63; --teal:#00B7B1; --mint:#E9F5F5; --paper:#F8FAFC; }
+  html,body { margin:0; height:100%; background:#000; display:grid; place-items:center; }
+  #stage { position:relative; width:1920px; height:1080px; overflow:hidden; background:var(--navy);
+           font-family:"Plus Jakarta Sans",system-ui,sans-serif; color:var(--paper); transform-origin:center; }
+  .aurora { position:absolute; border-radius:50%; filter:blur(60px); }
+  .a1 { width:1400px; height:1400px; left:-400px; top:-500px; background:radial-gradient(circle,rgba(0,183,177,.35),transparent 60%); }
+  .a2 { width:1600px; height:1600px; right:-600px; bottom:-800px; background:radial-gradient(circle,rgba(36,80,127,.9),transparent 62%); }
+  .orb { position:absolute; width:560px; height:560px; left:1180px; top:260px; border-radius:50%;
+         background:radial-gradient(circle at 32% 30%,#7ff0ea 0%,#00b7b1 38%,#0a5f6b 78%,#0b1f3a 100%); box-shadow:0 0 160px -10px rgba(0,183,177,.7); }
+  .ring { position:absolute; width:600px; height:600px; left:1330px; top:240px; border-radius:50%;
+          border:2px solid rgba(255,255,255,.35); background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03)); }
+  .ecg { position:absolute; left:120px; top:500px; width:1680px; height:160px; }
+  .ecg path { fill:none; stroke:url(#g); stroke-width:5; stroke-linecap:round; stroke-linejoin:round; }
+  .line { position:absolute; left:160px; font-weight:600; font-size:150px; letter-spacing:-5px; line-height:1; overflow:hidden; }
+  .line span { display:block; }
+  .l1 { top:250px } .l2 { top:410px; font-family:"Instrument Serif",Georgia,serif; font-style:italic; font-weight:400; color:#7ff0ea }
+  .l3 { top:570px }
+  .sub { position:absolute; left:164px; top:780px; font-size:40px; color:#c9d6e6 }
+  .brand { position:absolute; left:164px; top:880px; display:flex; gap:22px; align-items:center; font-size:34px; font-weight:600 }
+  .brand small { display:block; font-size:18px; letter-spacing:6px; color:#9DB3CC; font-weight:500 }
+  .book { position:absolute; width:300px; left:1460px; top:620px; border-radius:6px; box-shadow:0 40px 80px -20px rgba(0,0,0,.6); }
+</style>
+</head>
+<body>
+<div id="stage" data-width="1920" data-height="1080" data-duration="10">
+  <div class="aurora a1"></div><div class="aurora a2"></div>
+  <svg class="ecg" viewBox="0 0 1200 240" preserveAspectRatio="none">
+    <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#00B7B1"/><stop offset="1" stop-color="#8B93D9"/></linearGradient></defs>
+    <path id="ecgPath" d="M0 120 L150 120 L186 98 L200 120 L222 120 L238 36 L258 196 L276 120 L430 120 C 480 120,490 66,552 66 S 624 172,686 172 S 760 84,822 84 S 896 152,958 152 S 1030 104,1090 108 S 1160 124,1200 120"/>
+  </svg>
+  <div class="orb"></div><div class="ring"></div>
+  <!-- TEXT (edit here) -->
+  <div class="line l1"><span>Your Health.</span></div>
+  <div class="line l2"><span>Your Mind.</span></div>
+  <div class="line l3"><span>Our Priority.</span></div>
+  <div class="sub">Penjagaan kesihatan fizikal dan mental dalam satu tempat.</div>
+  <div class="brand"><svg width="64" height="64" viewBox="0 0 40 40"><circle cx="16" cy="20" r="10" fill="#00B7B1"/><circle cx="24" cy="20" r="10" fill="none" stroke="#F8FAFC" stroke-width="2.2"/><path d="M16 15.5v9M11.5 20h9" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+    <div>Klinik Nissa<small>GP · MENTAL HEALTH · NILAI</small></div></div>
+  <img class="book" src="../public/images/book-dr-saya-boleh-sembuh-ke.jpg" alt="" />
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // Fit the stage to the window for preview only.
+  const fit = () => { const s = Math.min(innerWidth / 1920, innerHeight / 1080); document.getElementById('stage').style.transform = `scale(${s})`; };
+  addEventListener('resize', fit); fit();
+
+  const path = document.getElementById('ecgPath'); const len = path.getTotalLength();
+  gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+  const E = 'expo.out';
+  const tl = gsap.timeline({ paused: true, defaults: { ease: E } });
+  tl.from('.a1', { opacity: 0, scale: .8, duration: 2 }, 0)
+    .from('.a2', { opacity: 0, scale: .8, duration: 2.4 }, .2)
+    // Act 1 — heartbeat becomes calm wave (physical → mental)
+    .to(path, { strokeDashoffset: 0, duration: 2.4, ease: 'power2.inOut' }, .3)
+    .to('.ecg', { opacity: 0, y: -40, duration: .8 }, 2.9)
+    // Act 2 — body & mind orbs
+    .from('.orb', { scale: .4, opacity: 0, duration: 1.6 }, 3.0)
+    .from('.ring', { scale: .6, opacity: 0, rotate: -25, duration: 1.8 }, 3.2)
+    // Act 3 — headline
+    .from('.l1 span', { yPercent: 110, duration: 1.1 }, 3.6)
+    .from('.l2 span', { yPercent: 110, duration: 1.1 }, 3.78)
+    .from('.l3 span', { yPercent: 110, duration: 1.1 }, 3.96)
+    .from('.sub', { opacity: 0, y: 24, duration: 1 }, 4.8)
+    // Act 4 — brand lock-up + book
+    .from('.brand', { opacity: 0, y: 24, duration: 1 }, 5.6)
+    .from('.book', { opacity: 0, y: 60, rotateY: -35, duration: 1.4 }, 6.0)
+    .to('.orb', { scale: 1.04, duration: 3, ease: 'sine.inOut', yoyo: true, repeat: 1 }, 4.6)
+    .to({}, { duration: .1 }, 9.9);
+  window.__timeline = tl;               // renderers seek this deterministically
+  if (!/[?&]render=1/.test(location.search)) tl.play();
+</script>
+</body>
+</html>
