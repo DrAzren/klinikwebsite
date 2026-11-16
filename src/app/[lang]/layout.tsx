@@ -8,7 +8,7 @@ import { FloatingWhatsApp } from "@/components/site/floating-whatsapp";
 import { getDictionary, hasLocale, HTML_LANG, LOCALES } from "@/lib/i18n";
 import { clinicWhatsApp, getSettings } from "@/lib/content/repo";
 import { whatsappLink } from "@/lib/whatsapp";
-import { env, showPreviewBanner } from "@/lib/env";
+import { env, isDemoDeployment, showPreviewBanner } from "@/lib/env";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-serif", display: "swap" });
@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     openGraph: { type: "website", siteName: "Klinik Nissa", locale: lang === "ms" ? "ms_MY" : "en_MY" },
     icons: { icon: "/icon.svg" },
     formatDetection: { telephone: false },
+    ...(isDemoDeployment() ? { robots: { index: false, follow: false } } : {}),
   };
 }
 
@@ -50,7 +51,7 @@ export default async function PublicLayout({ children, params }: LayoutProps<"/[
     <html lang={HTML_LANG[lang]} className={`${jakarta.variable} ${serif.variable}`}>
       <body className="min-h-dvh bg-paper text-ink antialiased">
         {showPreviewBanner() && (
-          <div className="relative z-[60] bg-warning-soft px-4 py-1.5 text-center text-xs font-medium text-warning">{dict.common.previewBanner}</div>
+          <div role="note" className="relative z-[60] bg-warning px-4 py-2 text-center text-xs font-semibold text-white sm:text-sm">{dict.common.previewBanner}</div>
         )}
         <SiteHeader lang={lang} nav={dict.nav} bookLabel={dict.cta.book} bookHref={bookHref} logoUrl={settings.logoUrl} />
         <main id="main">{children}</main>

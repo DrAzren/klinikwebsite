@@ -18,10 +18,10 @@ export default function Login() {
         <Link href="/staff/forgot" className="font-medium text-teal-700 hover:underline">Lupa kata laluan? / Forgot password?</Link>
         <Link href="/" className="text-ink-muted hover:text-navy-900">← Laman web</Link>
       </div>
-      {process.env.NODE_ENV !== "production" && !process.env.DATABASE_URL && (
+      {!process.env.DATABASE_URL && (
         <div className="mt-8">
           <Notice tone="warn">
-            <strong>Local demo only.</strong> Demo accounts (password <code>Demo-Tenang-2026!</code>): ceo.demo, doktor.demo, pembantu.demo, saringan.demo. They do not exist in production.
+            <strong>Demo sahaja / Demo only.</strong> Data direset dari semasa ke semasa. Demo accounts (password <code>Demo-Tenang-2026!</code>): ceo.demo, doktor.demo, pembantu.demo, saringan.demo. They do not exist in production.
           </Notice>
         </div>
       )}

@@ -1,5 +1,20 @@
 # Deployment
 
+## 0. Demo deployment (no database, no secrets) — Vercel import
+
+A production build that runs **without `DATABASE_URL`** automatically becomes a *demo deployment*:
+embedded PGlite in `/tmp` seeded with fictional staff/data (resets on cold starts), a prominent
+"VERSI DEMO" banner, `noindex` + `robots: Disallow: /`, screening results computed but **never stored**,
+careers form disabled, MFA not enforced. Override with `DEMO_MODE=true|false`.
+
+1. Sign in at https://vercel.com with GitHub → **Add New… → Project** → import `drazren/klinikwebsite`.
+2. Branch: `claude/confident-ritchie-x57eaj` (or merge it into `main` first). Framework: Next.js. No environment variables needed.
+3. **Deploy** → you get `https://<project>.vercel.app`.
+4. Staff demo login: `/staff/login` · `ceo.demo` / `Demo-Tenang-2026!` (also `doktor.demo`, `pembantu.demo`, `saringan.demo`).
+
+Limitations: demo data is per server instance and resets after inactivity; if a staff session drops, sign in again.
+To go live, follow the sections below — setting `DATABASE_URL` + `APP_ENCRYPTION_KEY` switches demo mode off.
+
 Target: **Vercel** (region `sin1`, Singapore) + **Supabase** (region `ap-southeast-1`). Any Node 22 host works (`npm run build && npm start`); see "Self-hosting" below.
 
 ## 1. Supabase
@@ -34,7 +49,7 @@ Use Google Workspace SMTP (`smtp.gmail.com:465`) with an **App Password** for a 
 
 1. Import the GitHub repository. Framework: Next.js. Node 22.
 2. Set environment variables from `.env.example` for **Production** (and Preview with separate, non-production resources). Required in production: `SITE_URL`, `DATABASE_URL`, `APP_ENCRYPTION_KEY`, `CLINIC_WHATSAPP_NUMBER`, `CAREERS_EMAIL`, `SCREENING_NOTIFY_EMAILS`, `SMTP_*`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`. Google variables when ready.
-3. Deploy. `vercel.json` schedules `/api/cron/jobs` every 10 minutes (needs a Pro plan for sub-daily crons; on Hobby use an external scheduler calling the endpoint with `Authorization: Bearer $CRON_SECRET`).
+3. Deploy. `vercel.json` schedules `/api/cron/jobs` daily (Hobby-compatible). On a Pro plan change the schedule to `*/10 * * * *`, or use an external scheduler calling the endpoint with `Authorization: Bearer $CRON_SECRET`.
 4. Add the custom domain; HSTS is sent automatically.
 
 ## 5. First Super Admin

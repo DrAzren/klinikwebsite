@@ -12,6 +12,7 @@ import { SEED } from "../content/seed";
 import type { CollectionName } from "../content/types";
 import { CONSENT_VERSION } from "../screening/instruments";
 import { submitScreening } from "../screening/service";
+import { isDemoDeployment } from "../env";
 
 export const DEMO_PASSWORD = "Demo-Tenang-2026!";
 
@@ -141,5 +142,5 @@ export async function seedDemo(db: Db, opts: { force?: boolean } = {}) {
 export async function seedIfEmpty(db: Db) {
   await seedReference(db);
   await seedContent(db);
-  if (process.env.NODE_ENV !== "production") await seedDemo(db);
+  if (process.env.NODE_ENV !== "production" || isDemoDeployment()) await seedDemo(db, { force: true });
 }

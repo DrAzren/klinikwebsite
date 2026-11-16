@@ -5,9 +5,13 @@ import { storeFile, UploadError, validateUpload } from "@/lib/files";
 import { clientIp, json, sameOrigin } from "@/lib/http";
 import { runJobs } from "@/lib/integrations/handlers";
 import { rateLimit } from "@/lib/rate-limit";
+import { isDemoDeployment } from "@/lib/env";
 
 export async function POST(req: Request) {
   if (!sameOrigin(req)) return json({ error: "forbidden" }, 403);
+  if (isDemoDeployment()) {
+    return json({ error: "Borang permohonan dimatikan dalam versi demo. / Applications are disabled in this demo." }, 503);
+  }
   const len = Number(req.headers.get("content-length") ?? 0);
   if (len > 6 * 1024 * 1024) return json({ error: "File too large (max 5 MB)" }, 413);
   const db = await getDb();

@@ -4,6 +4,9 @@ import { clientIp, json, sameOrigin } from "@/lib/http";
 import { rateLimit } from "@/lib/rate-limit";
 import { submissionSchema, submitScreening } from "@/lib/screening/service";
 import { runJobs } from "@/lib/integrations/handlers";
+import { isDemoDeployment } from "@/lib/env";
+import { referenceCode } from "@/lib/crypto";
+import { scoreScreening } from "@/lib/screening/scoring";
 
 const MAX_BODY = 20_000;
 
@@ -25,6 +28,17 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     // Do not echo submitted values back.
     return json({ error: "invalid", fields: parsed.error.issues.map((i) => i.path.join(".")) }, 400);
+  }
+
+  if (isDemoDeployment()) {
+    // Demo deployment: show results but never store answers or contact details.
+    const r = scoreScreening({ phq9: parsed.data.answers.phq9, gad7: parsed.data.answers.gad7 });
+    return json({
+      reference: referenceCode("DEMO"),
+      phq9: r.phq9 ? { score: r.phq9.score, severity: r.phq9.severity } : undefined,
+      gad7: r.gad7 ? { score: r.gad7.score, severity: r.gad7.severity } : undefined,
+      item9Positive: r.item9Positive,
+    });
   }
 
   const out = await submitScreening(db, parsed.data);

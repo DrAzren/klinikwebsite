@@ -6,7 +6,7 @@
  * Format: "v1.<iv b64url>.<tag b64url>.<ciphertext b64url>"  (AES-256-GCM)
  */
 import { createCipheriv, createDecipheriv, createHash, randomBytes, timingSafeEqual } from "node:crypto";
-import { env, isProduction } from "./env";
+import { env, isDemoDeployment, isProduction } from "./env";
 
 let warned = false;
 
@@ -17,7 +17,7 @@ function key(): Buffer {
     if (buf.length !== 32) throw new Error("APP_ENCRYPTION_KEY must be 32 bytes, base64 encoded");
     return buf;
   }
-  if (isProduction()) {
+  if (isProduction() && !isDemoDeployment()) {
     throw new Error("APP_ENCRYPTION_KEY is required in production");
   }
   if (!warned) {

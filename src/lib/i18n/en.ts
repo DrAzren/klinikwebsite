@@ -286,7 +286,7 @@ const en = {
     loading: "Loading…",
     backHome: "Back to home",
     notFound: "We couldn’t find that page.",
-    previewBanner: "Development preview — content and details are not yet verified for publication.",
+    previewBanner: "DEMO VERSION — content not yet verified. Do not enter real personal or health information.",
     lastUpdated: "Last updated",
   },
 };

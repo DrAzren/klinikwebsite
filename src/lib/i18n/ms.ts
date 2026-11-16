@@ -288,7 +288,7 @@ const ms: Dictionary = {
     loading: "Memuatkan…",
     backHome: "Kembali ke laman utama",
     notFound: "Halaman tersebut tidak dijumpai.",
-    previewBanner: "Pratonton pembangunan — kandungan dan maklumat belum disahkan untuk penerbitan.",
+    previewBanner: "VERSI DEMO — kandungan belum disahkan. Jangan masukkan maklumat peribadi atau kesihatan sebenar.",
     lastUpdated: "Kemas kini terakhir",
   },
 };

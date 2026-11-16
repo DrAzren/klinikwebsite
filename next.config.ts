@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Native / WASM server packages must not be bundled.
   serverExternalPackages: ["@electric-sql/pglite", "@node-rs/argon2", "postgres", "nodemailer"],
+  // Files read at runtime that static tracing can't see: SQL migrations (embedded
+  // demo database on Vercel) and PGlite's WebAssembly runtime.
+  outputFileTracingIncludes: {
+    "/**": ["./supabase/migrations/**/*", "./node_modules/@electric-sql/pglite/dist/**/*"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "*.supabase.co" }],

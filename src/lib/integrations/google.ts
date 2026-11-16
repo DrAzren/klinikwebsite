@@ -70,7 +70,7 @@ export interface DriveUpload {
 
 export async function driveUpload(u: DriveUpload): Promise<{ id: string; mode: "live" | "demo"; reused: boolean }> {
   if (!googleConfigured() || !u.folderId) {
-    const dir = path.join(".data", "drive-demo", u.folderId ?? "unconfigured");
+    const dir = path.join(env().DEMO_DATA_DIR, "drive-demo", u.folderId ?? "unconfigured");
     await mkdir(dir, { recursive: true });
     const file = path.join(dir, `${u.dedupeKey}__${u.name}`.replace(/[^\w.\-]+/g, "_"));
     await writeFile(file, u.content);
@@ -106,7 +106,7 @@ export async function sheetAppendUnique(
 ): Promise<{ mode: "live" | "demo"; appended: boolean }> {
   const e = env();
   if (!googleConfigured() || !e.GOOGLE_SHEETS_SCREENING_ID) {
-    const file = path.join(".data", "sheets-demo", "screening.csv");
+    const file = path.join(env().DEMO_DATA_DIR, "sheets-demo", "screening.csv");
     await mkdir(path.dirname(file), { recursive: true });
     const existing = await readFile(file, "utf8").catch(() => "");
     if (existing.split("\n").some((l) => l.startsWith(`"${keyColumnValue}"`))) return { mode: "demo", appended: false };

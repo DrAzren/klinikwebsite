@@ -24,7 +24,11 @@ const schema = z.object({
 
   // Database: Supabase Postgres in production; embedded PGlite when unset.
   DATABASE_URL: z.string().optional(),
-  PGLITE_DIR: z.string().default(".data/pglite"),
+  // On Vercel only /tmp is writable (used by the demo deployment).
+  PGLITE_DIR: z.string().default(process.env.VERCEL ? "/tmp/klinik/pglite" : ".data/pglite"),
+  DEMO_DATA_DIR: z.string().default(process.env.VERCEL ? "/tmp/klinik" : ".data"),
+  /** Force demo mode on/off. Default: demo whenever production runs without DATABASE_URL. */
+  DEMO_MODE: bool,
 
   // 32-byte key, base64. Encrypts screening payloads, TOTP secrets and other sensitive fields.
   APP_ENCRYPTION_KEY: z.string().optional(),
@@ -58,7 +62,7 @@ const schema = z.object({
   SUPABASE_URL: z.string().url().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default("klinik-private"),
-  LOCAL_STORAGE_DIR: z.string().default(".data/uploads"),
+  LOCAL_STORAGE_DIR: z.string().default(process.env.VERCEL ? "/tmp/klinik/uploads" : ".data/uploads"),
 
   // Ops
   CRON_SECRET: z.string().optional(),
@@ -88,11 +92,19 @@ export function env(): Env {
 
 export const isProduction = () => env().NODE_ENV === "production";
 
-/** MFA is enforced by default in production; can be forced on in development. */
-export const mfaRequired = () => env().MFA_REQUIRED ?? isProduction();
+/**
+ * Demo deployment: a production build running WITHOUT a real database (e.g. a
+ * Vercel import before Supabase is configured). Uses an ephemeral embedded
+ * database with fictional demo data, never stores screening answers or job
+ * applications, shows a warning banner and asks search engines not to index.
+ */
+export const isDemoDeployment = () => env().DEMO_MODE ?? (isProduction() && !env().DATABASE_URL);
+
+/** MFA is enforced by default in production (not in the demo); can be forced on in development. */
+export const mfaRequired = () => env().MFA_REQUIRED ?? (isProduction() && !isDemoDeployment());
 
 /** Banner reminding viewers that content is unverified preview data. */
-export const showPreviewBanner = () => env().SHOW_PREVIEW_BANNER ?? !isProduction();
+export const showPreviewBanner = () => env().SHOW_PREVIEW_BANNER ?? (!isProduction() || isDemoDeployment());
 
 export type IntegrationMode = "live" | "demo";
 
